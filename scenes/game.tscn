@@ -271,7 +271,7 @@ position = Vector2(77, -330)
 position = Vector2(-296, -247)
 
 [node name="bubble" parent="Bubbles" unique_id=2065977342 instance=ExtResource("3_lnu2h")]
-position = Vector2(21, 13)
+position = Vector2(10, -81)
 
 [node name="bubble5" parent="Bubbles" unique_id=970938463 instance=ExtResource("3_lnu2h")]
 position = Vector2(-221, -103)

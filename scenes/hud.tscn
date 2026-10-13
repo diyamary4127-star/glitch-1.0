@@ -1,0 +1,112 @@
+[gd_scene format=3 uid="uid://ddr6orxpra25y"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="FontFile" uid="uid://bu2nfnc1s7tm3" path="res://assets/fromprvgame/fonts/PixelOperator8-Bold.ttf" id="2_font_bold"]
+[ext_resource type="FontFile" uid="uid://56hegpfsai" path="res://assets/fromprvgame/fonts/PixelOperator8.ttf" id="3_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pill"]
+bg_color = Color(0.08, 0.09, 0.14, 0.75)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+expand_margin_left = 6.0
+expand_margin_top = 4.0
+expand_margin_right = 6.0
+expand_margin_bottom = 4.0
+
+[node name="HUD" type="CanvasLayer" unique_id=1857274151]
+script = ExtResource("1_hud")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1505437185]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=708357707]
+layout_mode = 2
+alignment = 1
+
+[node name="ScorePanel" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=2094562690]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/HBoxContainer/ScorePanel" unique_id=1495131020]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="CoinTag" type="Label" parent="MarginContainer/HBoxContainer/ScorePanel/HBox" unique_id=1247694225]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 9
+text = "★ SCORE"
+
+[node name="ScoreLabel" type="Label" parent="MarginContainer/HBoxContainer/ScorePanel/HBox" unique_id=1233618545]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 10
+text = "0"
+
+[node name="Spacer" type="Control" parent="MarginContainer/HBoxContainer" unique_id=446424045]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ComboContainer" type="Control" parent="MarginContainer/HBoxContainer" unique_id=965350079]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="ComboBadge" type="PanelContainer" parent="MarginContainer/HBoxContainer/ComboContainer" unique_id=1144631522]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -10.0
+offset_right = 40.0
+offset_bottom = 10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="ComboLabel" type="Label" parent="MarginContainer/HBoxContainer/ComboContainer/ComboBadge" unique_id=665904569]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("2_font_bold")
+theme_override_font_sizes/font_size = 9
+text = "2x COMBO!"
+horizontal_alignment = 1
+
+[node name="Spacer2" type="Control" parent="MarginContainer/HBoxContainer" unique_id=1673282337]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HighScorePanel" type="PanelContainer" parent="MarginContainer/HBoxContainer" unique_id=1280957309]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pill")
+
+[node name="HighScoreLabel" type="Label" parent="MarginContainer/HBoxContainer/HighScorePanel" unique_id=226881567]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.95, 0.9)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 8
+text = "BEST: 0"

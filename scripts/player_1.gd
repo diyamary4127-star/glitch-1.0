@@ -1,80 +1,83 @@
 extends CharacterBody2D
+
 # Emitted locally when the player enters a bubble.
 signal entered_bubble(bubble: Area2D)
 # Emitted locally when the player pops out of a bubble.
 signal popped_bubble
 
 @export_group("Movement")
-@export var float_speed: float = -100.0
-@export var steer_speed: float = 200.0
-@export var gravity: float = 600.0
-@export var pop_jump_velocity: float = -200.0
+@export var float_speed: float = -100.0      # Upward speed while inside a bubble
+@export var steer_speed: float = 200.0       # Left/right speed
+@export var gravity: float = 600.0           # Downward pull when outside a bubble
+@export var pop_jump_velocity: float = -200.0 # Small hop when a bubble pops
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 
-
+# True while the frog is dead. Bubbles ignore the player while this is true.
 var is_dead: bool = false
 
 
 func _ready() -> void:
 	is_dead = false
-	Globals.reset()
 	animated_sprite_2d.play("idle")
-	# Listen to global bubble events
+	# Listen to global bubble/respawn events
 	Globals.bubble_entered.connect(_on_bubble_entered)
 	Globals.bubble_popped.connect(_on_bubble_popped)
+	Globals.player_respawn.connect(_on_player_respawn)
 
 
+# Called by the killzone when the frog touches something deadly.
 func die() -> void:
 	if is_dead:
-		return
+		return # Already dead, don't run twice
 	is_dead = true
+	# Free the frog from its bubble first (this pops the bubble)
 	if Globals.is_in_bubble:
 		Globals.pop_bubble()
-	Globals.reset()
+	# Play death AFTER popping, so nothing overrides it
 	animated_sprite_2d.play("death")
 
 
 func _physics_process(delta: float) -> void:
-	# When dead or collision shape has been removed, fall in death pose with controls disabled
-	var col := get_node_or_null("CollisionShape2D")
-	if is_dead or col == null or col.is_queued_for_deletion():
-		is_dead = true
+	# --- DEAD STATE ---
+	# Controls are disabled; the frog just falls in the death pose.
+	# (The killzone disables the collision shape, so it falls through the floor.)
+	if is_dead:
 		if animated_sprite_2d.animation != "death":
 			animated_sprite_2d.play("death")
 		velocity.x = 0
 		velocity.y += gravity * delta
 		move_and_slide()
-		return
+		return # Skip all normal movement and animation code below
 
+	# --- NORMAL STATE ---
 	var input_axis := Input.get_axis("ui_left", "ui_right")
-	
-	
+
 	# Horizontal steering
 	velocity.x = input_axis * steer_speed
-	
+
 	# Flip sprite according to direction of movement
 	if input_axis > 0:
 		animated_sprite_2d.flip_h = false
 	elif input_axis < 0:
 		animated_sprite_2d.flip_h = true
-	
+
 	if Globals.is_in_bubble:
-		# Float upwards while inside bubble
+		# Float upwards while inside the bubble
 		velocity.y = float_speed
-		
-		# Pop the bubble when player presses action button (e.g. Space / Enter)
+
+		# Pop the bubble when the action button is pressed (Space / Enter)
 		if Input.is_action_just_pressed("ui_accept"):
 			Globals.pop_bubble()
 	else:
-		# Fall under gravity when outside bubble
+		# Fall under gravity when outside a bubble
 		velocity.y += gravity * delta
 		_update_ground_air_animation()
 
 	move_and_slide()
-	
 
 
+# Chooses idle/drop animation depending on whether we're on the ground.
 func _update_ground_air_animation() -> void:
 	if is_on_floor():
 		if animated_sprite_2d.animation != "idle":
@@ -92,10 +95,13 @@ func _on_bubble_entered(bubble: Area2D) -> void:
 func _on_bubble_popped(_bubble: Area2D) -> void:
 	# Give the frog a slight hop upward when bursting free
 	velocity.y = pop_jump_velocity
-	animated_sprite_2d.play("drop")
+	# Don't switch to "drop" if the frog is dying, or it would hide the death animation
+	if not is_dead:
+		animated_sprite_2d.play("drop")
 	popped_bubble.emit()
 
 
+# Adjusts the sprite offset so each animation lines up with the collision shape.
 func _on_animated_sprite_2d_animation_changed() -> void:
 	match animated_sprite_2d.animation:
 		"idle", "death":
@@ -105,4 +111,11 @@ func _on_animated_sprite_2d_animation_changed() -> void:
 
 
 func _on_popped_bubble() -> void:
-	print("CHECK") # Replace with function body.
+	print("CHECK")
+
+
+# Called (via Globals) when the killzone respawns the frog.
+func _on_player_respawn() -> void:
+	is_dead = false            # THE FIX: lets bubbles detect the player again
+	velocity = Vector2.ZERO    # Clear leftover fall speed
+	animated_sprite_2d.play("idle")

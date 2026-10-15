@@ -10,7 +10,11 @@ signal bubble_popped(bubble: Area2D)
 signal bubble_respawned(bubble: Area2D)
 
 # Emitted whenever the floating state changes (useful for audio / UI).
+signal player_respawn
 signal bubble_state_changed(is_floating: bool)
+var health=5
+var text=""
+var respawn=false
 
 # State tracking
 var is_in_bubble: bool = false
@@ -39,12 +43,18 @@ func pop_bubble() -> void:
 		bubble_popped.emit(bubble)
 	bubble_state_changed.emit(false)
 
-
 func reset() -> void:
 	is_in_bubble = false
 	current_bubble = null
+	health = 5   # Restore lives, otherwise every death after game over reloads instantly
 	bubble_state_changed.emit(false)
 
 
 func addpoint():
 	score+=1
+	
+func player_respawned():
+	player_respawn.emit()
+		
+
+	

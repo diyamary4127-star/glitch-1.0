@@ -1,7 +1,10 @@
 extends Node
 
+@onready var label: Label = $"../Player1/Camera2D/Label"
 
-@onready var label: Label = $Label
+
+
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

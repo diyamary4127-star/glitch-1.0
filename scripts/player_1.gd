@@ -12,6 +12,7 @@ signal popped_bubble
 @export var pop_jump_velocity: float = -200.0 # Small hop when a bubble pops
 
 @onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
+@onready var fallen: Label = get_node_or_null("Camera2D/fallen")
 
 # True while the frog is dead. Bubbles ignore the player while this is true.
 var is_dead: bool = false
@@ -36,12 +37,11 @@ func die() -> void:
 		Globals.pop_bubble()
 	# Play death AFTER popping, so nothing overrides it
 	animated_sprite_2d.play("death")
+	
 
 
 func _physics_process(delta: float) -> void:
-	# --- DEAD STATE ---
-	# Controls are disabled; the frog just falls in the death pose.
-	# (The killzone disables the collision shape, so it falls through the floor.)
+	# DEAD STATE
 	if is_dead:
 		if animated_sprite_2d.animation != "death":
 			animated_sprite_2d.play("death")
@@ -50,7 +50,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return # Skip all normal movement and animation code below
 
-	# --- NORMAL STATE ---
+	# NORMAL STATE
 	var input_axis := Input.get_axis("ui_left", "ui_right")
 
 	# Horizontal steering
@@ -66,7 +66,7 @@ func _physics_process(delta: float) -> void:
 		# Float upwards while inside the bubble
 		velocity.y = float_speed
 
-		# Pop the bubble when the action button is pressed (Space / Enter)
+		# Pop the bubble when the action button is pressed (Space )
 		if Input.is_action_just_pressed("ui_accept"):
 			Globals.pop_bubble()
 	else:
@@ -109,13 +109,8 @@ func _on_animated_sprite_2d_animation_changed() -> void:
 		"drop":
 			animated_sprite_2d.offset = Vector2(0.28, 4.145)
 
-
-func _on_popped_bubble() -> void:
-	print("CHECK")
-
-
 # Called (via Globals) when the killzone respawns the frog.
 func _on_player_respawn() -> void:
-	is_dead = false            # THE FIX: lets bubbles detect the player again
-	velocity = Vector2.ZERO    # Clear leftover fall speed
+	is_dead = false           
+	velocity = Vector2.ZERO  
 	animated_sprite_2d.play("idle")

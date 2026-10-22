@@ -31,6 +31,10 @@ func _process(_delta: float) -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		if name == "bubble7" or name.to_lower() == "bubble7":
+			Globals.reach_bubble_7(self)
+
 	if Globals.is_in_bubble:# we dont check if we are hitting already popped bubbles coz their collision will be disabled eitherhow
 		return
 	
@@ -65,6 +69,7 @@ func _on_timer_timeout() -> void:
 
 ## Resets the bubble back to its original spawn position and re-enables collision.
 func respawn() -> void:
+	timer.stop()
 	global_position = spawn_position
 	is_popped = false
 	carried_body = null

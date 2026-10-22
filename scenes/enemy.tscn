@@ -181,15 +181,14 @@ position = Vector2(4, -2)
 scale = Vector2(0.32908952, 0.31382042)
 skew = 0.013962634
 sprite_frames = SubResource("SpriteFrames_u5k7t")
-animation = &"new_animation"
+animation = &"idle"
 autoplay = "idle"
-frame_progress = 0.39753154
 flip_h = true
 
 [node name="killzone" parent="AnimatedSprite2D" unique_id=839466382 instance=ExtResource("2_n6pvg")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AnimatedSprite2D/killzone" unique_id=148374294]
-position = Vector2(-9.064192, 0.48590612)
+position = Vector2(6.162236, 6.373692)
 scale = Vector2(1, 0.9999998)
 skew = -0.06632251
 shape = SubResource("RectangleShape2D_u5k7t")
@@ -199,4 +198,5 @@ position = Vector2(1, 0)
 target_position = Vector2(8, 0)
 
 [node name="RayCast2Dleft" type="RayCast2D" parent="." unique_id=1626218195]
+position = Vector2(2, 1)
 target_position = Vector2(-6, 0)

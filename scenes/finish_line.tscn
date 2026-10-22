@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dfinishline01"]
+
+[ext_resource type="Script" path="res://scripts/finish_line.gd" id="1_fnsh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fnsh"]
+size = Vector2(84, 52)
+
+[node name="finish_line" type="Area2D" unique_id=987654321]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_fnsh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=987654322]
+shape = SubResource("RectangleShape2D_fnsh")
